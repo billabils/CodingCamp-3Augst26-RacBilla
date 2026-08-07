@@ -31,7 +31,7 @@ Karena proyek ini menggunakan file tunggal (`index.html`), kamu bisa langsung me
 
 1. **Clone repositori ini** ke komputer kamu melalui terminal:
    ```bash
-   git clone [https://github.com/username/nama-repositori.git](https://github.com/username/nama-repositori.git)
+   git clone [https://github.com/billabils/CodingCamp-3Augst26-RacBilla.gitt]
 2. Buka folder proyek tersebut di text editor pilihanmu (seperti **Kiro IDE** atau **VS Code**).
 3. Buka file `index.html` langsung di browser, atau gunakan ekstensi **Live Server** di editor untuk pengalaman pengembangan terbaik.
 
