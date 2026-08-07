@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEMAT - Anak Kost</title>
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- CSS Terpisah -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon"><i class="fa-solid fa-wallet"></i></div>
+        <div>
+          <h1>HEMAT <span>- Anak Kost</span></h1>
+          <p class="subtitle">Student Daily Tracker</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="btn-icon" title="Mode Gelap/Terang">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTAINER UTAMA STATUS DOMPET -->
+    <section class="payday-safeguard-card">
+      <div class="payday-header-row">
+        <div class="budget-title-container" id="editLabelBtn" title="Klik untuk ubah teks judul">
+          <i class="fa-solid fa-pen" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+          <span id="budgetTitleLabel">GAJI BULAN AGUSTUS 2026</span>
+        </div>
+      </div>
+
+      <!-- 4 Kolom Status Dompet -->
+      <div class="status-container-grid">
+        <div class="status-col-card">
+          <span class="status-col-title">Total Alokasi Gaji</span>
+          <div class="status-col-input-wrapper">
+            <span class="currency-prefix">Rp</span>
+            <input type="number" id="totalBudgetInput" class="inline-budget-input" value="6000000" min="0" />
+          </div>
+          <div class="sub-value-info" style="font-size: 0.75rem; color: var(--text-muted);">Bulanan (Bisa diketik langsung)</div>
+        </div>
+
+        <div class="status-col-card highlight">
+          <span class="status-col-title">Daily Safe Limit (Target Harian)</span>
+          <div class="status-col-value" id="dailyLimitDisplay" style="color: #34d399;">Rp 0 <span style="font-size: 0.75rem; font-weight: normal; color: var(--text-muted);">/hari</span></div>
+          <div class="sub-value-info">
+            <span class="days-badge"><i class="fa-solid fa-calendar-days"></i> Sisa Hari: <strong id="remainingDaysCount">0</strong></span>
+          </div>
+        </div>
+
+        <div class="status-col-card">
+          <span class="status-col-title">Total Terpakai</span>
+          <div class="status-col-value" id="totalExpensesDisplay" style="color: #f87171;">Rp 0</div>
+          <div class="sub-value-info" style="font-size: 0.75rem; color: var(--text-muted);" id="spentPercentageText">0% terpakai</div>
+        </div>
+
+        <div class="status-col-card">
+          <span class="status-col-title">Sisa Saldo</span>
+          <div class="status-col-value" id="remainingBalanceDisplay" style="color: #fbbf24;">Rp 0</div>
+          <div class="sub-value-info" style="font-size: 0.75rem; color: var(--text-muted);" id="statusIndicatorBox">
+          </div>
+        </div>
+      </div>
+
+      <!-- Peringatan Safeguard Banner -->
+      <div class="safeguard-warning-banner" id="safeguardWarningBanner">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="warningBannerText">PERINGATAN SAFEGUARD: Target harian Anda kurang dari Rp 50.000/hari!</span>
+      </div>
+    </section>
+
+    <!-- Tambah Pengeluaran -->
+    <section class="card card-form-left">
+      <h2><i class="fa-solid fa-wallet"></i> Tambah Pengeluaran</h2>
+      <form id="transactionForm" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="form-group">
+          <label>Nama Barang / Keperluan <span class="required">*</span></label>
+          <input type="text" id="itemName" placeholder="Misal: Mie Instan / Sarapan Pagi" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label>Jumlah (Rp) <span class="required">*</span></label>
+            <input type="number" id="itemAmount" placeholder="0" min="1" required />
+          </div>
+          <div class="form-group flex-1">
+            <label>Kategori <span class="required">*</span></label>
+            <select id="itemCategory" required>
+              <option value="" disabled selected>Pilih Kategori</option>
+              <option value="Makanan">🍚 Makanan</option>
+              <option value="Transportasi">🚌 Transportasi</option>
+              <option value="Kopi/Nongkrong">☕ Kopi</option>
+              <option value="Listrik/Air">⚡ Listrik/Air</option>
+              <option value="Skincare">✨ Skincare</option>
+              <option value="Lainnya">📦 Lainnya</option>
+              <option value="custom_add" style="font-weight: bold; color: var(--primary);">➕ Tambah Kategori Baru...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Pengeluaran Untuk</label>
+          <select id="expensePeriodSelect">
+            <option value="hari_ini">Hari Ini</option>
+            <option value="seminggu">Seminggu</option>
+            <option value="sebulan">Sebulan</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 4px;">
+          <i class="fa-solid"></i> Catat Pengeluaran
+        </button>
+      </form>
+    </section>
+
+    <!-- Grafik Pengeluaran -->
+    <section class="card card-chart-right">
+      <h2><i class="fa-solid fa-chart-pie"></i> Grafik Pengeluaran</h2>
+      <div class="chart-container">
+        <canvas id="expenseChart"></canvas>
+        <div id="chartEmptyState" class="empty-state">
+          <i class="fa-solid" style="font-size: 1.8rem;"></i>
+          <p>Belum ada data transaksi.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Riwayat Transaksi -->
+    <section class="card card-history-bottom">
+      <div class="list-header">
+        <h2><i class="fa-solid fa-receipt"></i> Riwayat Transaksi</h2>
+        <select id="sortTransactionsSelect" class="sort-select">
+          <option value="newest">Terbaru</option>
+          <option value="oldest">Terlama</option>
+          <option value="amount-high">Nominal Terbesar</option>
+          <option value="amount-low">Nominal Terkecil</option>
+          <option value="category">Kategori (A-Z)</option>
+        </select>
+      </div>
+      <div class="transaction-list" id="transactionList"></div>
+    </section>
+  </div>
+
+  <!-- Modal Ubah Teks Label Judul -->
+  <div class="modal" id="labelModal">
+    <div class="modal-content">
+      <h3>Ubah Judul Anggaran</h3>
+      <div class="form-group" style="margin-top: 4px;">
+        <label>Teks Keterangan</label>
+        <input type="text" id="labelTextInput" placeholder="Misal: GAJIAN AGUSTUS 2026" />
+      </div>
+      <div class="modal-actions">
+        <button id="cancelLabelBtn" class="btn" style="background: transparent; color: var(--text-main);">Batal</button>
+        <button id="saveLabelBtn" class="btn btn-primary">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Kategori Kustom -->
+  <div class="modal" id="customCategoryModal">
+    <div class="modal-content">
+      <h3>Tambah Kategori Kustom</h3>
+      <div class="form-group" style="margin-top: 4px;">
+        <label>Nama Kategori Baru</label>
+        <input type="text" id="customCategoryInput" placeholder="Misal: Hiburan, Buku, dll" />
+      </div>
+      <div class="modal-actions">
+        <button id="cancelCustomCatBtn" class="btn" style="background: transparent; color: var(--text-main);">Batal</button>
+        <button id="saveCustomCatBtn" class="btn btn-primary">Tambah</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Terpisah -->
+  <script src="js/app.js"></script>
+</body>
+</html>
