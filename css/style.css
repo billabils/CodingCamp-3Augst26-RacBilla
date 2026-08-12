@@ -477,7 +477,13 @@ body:not(.dark-mode) .transaction-item { background-color: rgba(255, 255, 255, 0
   .chart-container { height: 250px; }
 
   .list-header { align-items: flex-start; flex-direction: column; gap: 10px; }
-  .sort-select { width: 100%; max-width: none; padding: 10px 12px; font-size: 16px; }
+  .sort-select {
+    width: auto;
+    max-width: 100%;
+    align-self: flex-start;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
   .transaction-item { align-items: flex-start; flex-direction: column; gap: 10px; padding: 12px; }
   .item-info { width: 100%; }
   .item-details h4, .item-details span { overflow-wrap: anywhere; }
